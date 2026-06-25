@@ -1,5 +1,6 @@
 import { mockLogger } from '@n8n/backend-test-utils';
 import type { GlobalConfig } from '@n8n/config';
+import { LICENSE_FEATURES, UNLIMITED_LICENSE_QUOTA } from '@n8n/constants';
 import type { SettingsRepository } from '@n8n/db';
 import { LicenseManager } from '@n8n_io/license-sdk';
 import { mock } from 'jest-mock-extended';
@@ -129,6 +130,18 @@ describe('License', () => {
 		license.isLicensed(MOCK_FEATURE_FLAG);
 
 		expect(LicenseManager.prototype.hasFeatureEnabled).toHaveBeenCalledWith(MOCK_FEATURE_FLAG);
+	});
+
+	test('enables variables without requiring a license entitlement', () => {
+		expect(license.isLicensed(LICENSE_FEATURES.VARIABLES)).toBe(true);
+		expect(LicenseManager.prototype.hasFeatureEnabled).not.toHaveBeenCalledWith(
+			LICENSE_FEATURES.VARIABLES,
+		);
+	});
+
+	test('uses unlimited variables quota without requiring a license quota', () => {
+		expect(license.getVariablesLimit()).toBe(UNLIMITED_LICENSE_QUOTA);
+		expect(LicenseManager.prototype.getFeatureValue).not.toHaveBeenCalledWith('quota:maxVariables');
 	});
 
 	test('check if sharing feature is enabled', () => {

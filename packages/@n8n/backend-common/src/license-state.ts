@@ -135,7 +135,7 @@ export class LicenseState {
 	}
 
 	isVariablesLicensed() {
-		return this.isLicensed('feat:variables');
+		return true;
 	}
 
 	isSourceControlLicensed() {
@@ -215,7 +215,7 @@ export class LicenseState {
 	}
 
 	getMaxVariables() {
-		return this.getValue('quota:maxVariables') ?? UNLIMITED_LICENSE_QUOTA;
+		return UNLIMITED_LICENSE_QUOTA;
 	}
 
 	getMaxAiCredits() {
